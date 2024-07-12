@@ -1,0 +1,18 @@
+first_name,last_name,email,groups,picture_url,password,termination_date
+Jane,Doe,jane@edcast.com,,,,2024-07-08
+Jane,Doe,jane123@edcast.com,Technology,,Password@123,
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+NOTE:,,,,,,
+Password should have:,,,,,,
+1. Minimum 8 characters,,,,,,
+2. Atleast 1 capital letter:  A-Z,,,,,,
+3. Atleast 1 small letter:  a-z,,,,,,
+4. Atleast 1 number:  0-9,,,,,,
+5. Atlease 1 special character:   #?!@$%^&*-,,,,,,
+,,,,,,
+Picture URL should be less than or equal to 15 MB,,,,,,
+Users with Suspended status will not be receiving welcome Email,,,,,,
+termination_date format is: YYYY-MM-DD,,,,,,

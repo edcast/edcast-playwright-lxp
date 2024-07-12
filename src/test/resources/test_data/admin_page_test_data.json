@@ -1,0 +1,23 @@
+{
+	"new_user_data": [
+		[
+			"Akshay",
+			"Blera",
+			"testmail.csod@gmail.com",
+			"",
+			"",
+			"Password@123"
+		],
+		[
+			"Akshay",
+			"Kumar",
+			"edcast.test.emails@gmail.com",
+			"",
+			"",
+			"Password@123"
+		]
+	],
+	"testmail.csod@gmail.com": "jlkutkqutwryfpae",
+	"edcast.test.emails@gmail.com": "eympoikqjbieduwy",
+	"emailSubjectLine":"Welcome to picassov3uspreview powered by EdCast"
+}
