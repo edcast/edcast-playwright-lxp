@@ -37,8 +37,8 @@ public class PlayTest extends BaseTest {
 
 		loginPage.adminLogin();
 		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
-		cardService = getPage(CardService.class, page).createCard1(CardTypes.UPLOAD, testCard);
 		testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, page).createCard1(CardTypes.UPLOAD, testCard);
 
 		Assert.assertEquals(cardService.getToastMessageAfterSavingCard1(),
 				"Your card has been published publicly and will be accessible to everyone.", "Toast message not found");
@@ -66,9 +66,10 @@ public class PlayTest extends BaseTest {
 	 * provider. Once you register the phone number and add funds to your account,
 	 * the code will work correctly.
 	 */
+	@Test
 	public void OTPTest() {
 		String to = "+919717467417"; // recipient's phone number
-		String otp = OTPGenerator.generateOTP(6);
+		String otp = new OTPUtils().generateOTP(6);
 		String message = "Your OTP code is: " + otp;
 		new OTPUtils().sendSMS(to, message);
 
