@@ -59,9 +59,8 @@ public class SmartCardPage extends PageBase {
 	}
 
 	public HomePage setCardDetails(String cardName)  {
-		// page.getByLabel(label).click();
 		page.locator(fileUploadPath).setInputFiles(Paths.get(testData.getString("test_file_name")));
-		page.waitForTimeout(2000); // Wait for 5 seconds
+		pause(3);
 		page.locator(clickUpload).click();
 		page.getByLabel(labelCardTitle).clear();
 		page.getByLabel(labelCardTitle).fill(cardName);

@@ -1,9 +1,10 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="Suite">
+<suite name="PlaywrightTests Suite" parallel="methods"
+	thread-count="1">
 
-    <test name="Test">
-        <classes>
-            <class name="com.qa.testcases.PlayTest" />
-        </classes>
-    </test>
+	<test name="Test">
+		<classes>
+			<class name="com.qa.testcases.PicassoTest" />
+		</classes>
+	</test>
 </suite>

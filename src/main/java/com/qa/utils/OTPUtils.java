@@ -2,10 +2,13 @@ package com.qa.utils;
 
 import java.util.Random;
 
+import org.testng.annotations.Listeners;
+
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
+import io.qameta.allure.testng.AllureTestNg;
 public class OTPUtils {
 
 
@@ -28,7 +31,7 @@ public class OTPUtils {
 				new PhoneNumber("+918076131669"), //Sample phone number, not registered
 				message).create();
 
-		System.out.println("SMS sent successfully: " + sms.getSid());
+		//LOGGER.error("SMS sent successfully: " + sms.getSid());
 	}
 
 }

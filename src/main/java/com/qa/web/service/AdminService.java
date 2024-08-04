@@ -1,6 +1,7 @@
 package com.qa.web.service;
 
 import com.qa.pages.AdminPage;
+
 import com.qa.pages.BaseTest;
 import com.qa.pages.HomePage;
 import com.qa.pages.SmartCardPage;
@@ -9,6 +10,7 @@ import com.qa.utils.EmailUtils;
 import dev.brachtendorf.jimagehash.hash.Hash;
 import dev.brachtendorf.jimagehash.hashAlgorithms.HashingAlgorithm;
 import dev.brachtendorf.jimagehash.hashAlgorithms.PerceptiveHash;
+import io.qameta.allure.testng.AllureTestNg;
 import net.coobird.thumbnailator.Thumbnails;
 
 import static com.qa.utils.Constants.Test_DATA.ADMIN_PAGE_TEST_DATA;
@@ -24,11 +26,14 @@ import javax.imageio.ImageIO;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 
 import com.google.gson.Gson;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.LoadState;
 import com.qa.base.PlaywrightFactory;
 import com.qa.enums.*;
+@Listeners({AllureTestNg.class})
 
 public class AdminService extends BaseTest {
 	Page page;
@@ -36,10 +41,11 @@ public class AdminService extends BaseTest {
 	public AdminService(Page page) {
 		this.page = page;
 		homePage = new HomePage(page);
+		adminPage = new AdminPage(page);
 
 	}
 
-	public AdminService openAdminAccountTab() {
+	public AdminService openAdminAccountTab() {		
 		homePage.clickOnMoreButton();
 		adminPage = homePage.clickOnAdminButton();
 		adminPage.clickOnAccountTab();
@@ -55,7 +61,11 @@ public class AdminService extends BaseTest {
 		adminPage.uploadSampleFileWithUsersDetails(val);
 		return this;
 	}
-
+	public <T extends BaseTest> AdminService deleteExistingUser(JSONArray val) {
+		adminPage.clickOnUsersTab();
+		adminPage.deleteExistingUser(val);
+		return this;
+	}
 	public AdminService getEmailConfirmationAndUserOnBoarding(JSONObject testData) {
 		JSONArray val = testData.getJSONArray("new_user_data");
 		homePageService = new HomePageService(page);
@@ -67,7 +77,7 @@ public class AdminService extends BaseTest {
 			page = PlaywrightFactory.openNewTab(inviteURL);
 			homePageService.fillDefaultOnboardingInfo(page);
 			Assert.assertTrue(homePageService.getUserNameAfterFirstLoginOnScreen(page)
-					.contains(stringArray[0] + " " + stringArray[1]));
+					.contains(stringArray[0] + " " + stringArray[1]),"User Name on the dashboard is not correct");
 
 		}
 

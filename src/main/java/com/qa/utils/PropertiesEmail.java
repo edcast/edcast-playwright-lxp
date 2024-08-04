@@ -1,7 +1,6 @@
 package com.qa.utils;
 
 import java.util.Properties;
-
 public class PropertiesEmail {
 	String host = "imap.gmail.com";
 	String user;

@@ -1,30 +1,10 @@
 package com.qa.web.service;
 
-import com.qa.pages.AdminPage;
+import com.microsoft.playwright.Page;
 import com.qa.pages.BaseTest;
 import com.qa.pages.HomePage;
-import com.qa.pages.SmartCardPage;
 import com.qa.utils.CommonUtils;
 import com.qa.utils.EmailUtils;
-
-import dev.brachtendorf.jimagehash.hash.Hash;
-import dev.brachtendorf.jimagehash.hashAlgorithms.HashingAlgorithm;
-import dev.brachtendorf.jimagehash.hashAlgorithms.PerceptiveHash;
-import net.coobird.thumbnailator.Thumbnails;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.testng.Assert;
-
-import com.google.gson.Gson;
-import com.microsoft.playwright.Page;
-import com.qa.base.PlaywrightFactory;
-import com.qa.enums.*;
-
 public class HomePageService extends BaseTest {
 	
 	Page page;
@@ -58,12 +38,17 @@ public class HomePageService extends BaseTest {
 		return this;
 
 	}
+	public HomePageService clickGetTranscript() {
+		homePage.clickSkillsPassport();
+		return this;
 
+	}
+	
+	
 	public String downloadPDFContent() {
 
-		new EmailUtils().getEmailInfo(config.getProperty("adminEmail1"), config.getProperty("adminGmailKeyAccess"),
+		new EmailUtils().getEmailInfo(config.getProperty("picasso.adminEmail1"), config.getProperty("picasso.adminGmailKeyAccess"),
 				testData.getString("emailSubjectLine"));
-		System.out.println(testData.getString("file-name"));
 		String pdfContent = new CommonUtils().readContentFromPDF(testData.getString("file-name"));
 		return pdfContent;
 	}

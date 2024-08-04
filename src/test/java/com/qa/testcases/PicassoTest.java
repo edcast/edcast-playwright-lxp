@@ -1,0 +1,181 @@
+package com.qa.testcases;
+
+import static com.qa.utils.Constants.Test_DATA.ADMIN_PAGE_TEST_DATA;
+import static com.qa.utils.Constants.Test_DATA.PAATHWAY_TEST_DATA;
+import static com.qa.utils.Constants.Test_DATA.SKILL_PASSPORT_TEST_DATA;
+import static com.qa.utils.Constants.Test_DATA.SMART_CARD_TEST_DATA;
+import java.sql.SQLException;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.testng.Assert;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+import com.qa.enums.CardTypes;
+import com.qa.pages.BaseTest;
+import com.qa.utils.DBUtils;
+import com.qa.utils.OTPUtils;
+import com.qa.web.service.AdminService;
+import com.qa.web.service.CardService;
+import com.qa.web.service.HomePageService;
+import com.qa.web.service.PathwayService;
+import io.qameta.allure.Description;
+import io.qameta.allure.testng.AllureTestNg;
+
+@Listeners({ AllureTestNg.class })
+public class PicassoTest extends BaseTest {
+
+	@Test(priority = 1)
+
+	@Description("Part -1 In this test case existing users are deleted")
+	public void testDeleteExistingUser() {
+		loginPage.adminLogin();
+		testData = getTestData(ADMIN_PAGE_TEST_DATA);
+		getPage(AdminService.class, page).openAdminAccountTab()
+				.deleteExistingUser(testData.getJSONArray("new_user_data"));
+
+	}
+
+	@Test(priority = 2)
+	@Description("Part -2 Users file is downloaded and uploaded with user details. "
+			+ "After uploading users details users are onboarded after fetchng the link provided in the mail box.")
+	public void testDownloadUserFileAndUploadUsersDetailsAndUserOnboarding() {
+		loginPage.adminLogin();
+		testData = getTestData(ADMIN_PAGE_TEST_DATA);
+		getPage(AdminService.class, page).openAdminAccountTab()
+				.deleteExistingUser(testData.getJSONArray("new_user_data"))
+				.downloadSampleFileAndUploadUserDetails1(testData.getJSONArray("new_user_data"))
+				.getEmailConfirmationAndUserOnBoarding(testData);
+
+	}
+
+	@Test(priority = 3)
+	@Description("Part -1 In this test case Toast message is verified after creating the card")
+	public void testVerifyToastMessage() throws InterruptedException {
+		loginPage.adminLogin();
+		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
+		testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
+		Assert.assertEquals(cardService.getToastMessageAfterSavingCard1(),
+				"Your card has been published publicly and will be accessible to everyone.", "Toast message not found");
+	}
+
+	@Test(priority = 4)
+
+	@Description("Part -2 In this test case card is assigned to self with calendar")
+	public void testSelfAssignCard() throws InterruptedException {
+		loginPage.adminLogin();
+		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
+		testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
+		cardService.clickOnSelfAssignCardWithDate(page, testCard, "6-November-2024", "7-November-2024");
+		cardService.isAssignToMeOptionPresent(testCard);
+		Assert.assertFalse(cardService.isAssignToMeOptionPresent(testCard),
+				"After assigning to me, Assign to me option not available");
+
+	}
+
+	@Test(priority = 5)
+
+	@Description("Part -3 In this test case card image is compared")
+	public void testCardImageCompare() throws InterruptedException {
+		loginPage.adminLogin();
+		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
+		testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
+		getPage(HomePageService.class, page).cardSearch(testCard);
+		int hammingDistanceValue = cardService.getCardImageHammingDistance(testCard, page, testData);
+		Assert.assertTrue(hammingDistanceValue <= 3,
+				"Images are not identical: Hamming value is " + hammingDistanceValue);
+	}
+
+
+
+	@Test(priority = 6)
+
+	@Description("This test case checks PDF content after downloading content from the email.")
+	public void pdfContentTest() {
+		loginPage.memberLogin();
+		testData = getTestData(SKILL_PASSPORT_TEST_DATA);
+		homePageService = getPage(HomePageService.class, page).clickGetTranscript();
+		homePageService.matchPDFContent(homePageService.downloadPDFContent());
+
+	}
+
+	/*
+	 * Case is failing. In a professional setting, SMS APIs require a registered
+	 * phone number to send messages, which must be purchased from the service
+	 * provider. Once you register the phone number and add funds to your account,
+	 * the code will work correctly.
+	 */
+	@Test(priority = 7)
+
+	@Description("This test case sends OTP on the registered phone.")
+	public void OTPTest() {
+		logStep("Starting the test: OTPTest");
+		String to = "+919717467417"; // recipient's phone number
+		String otp = new OTPUtils().generateOTP(6);
+		String message = "Your OTP code is: " + otp;
+		new OTPUtils().sendSMS(to, message);
+
+	}
+
+	@Test(priority = 8)
+
+	@Description("This test case checks drag and drop feature")
+	public void testDragAndDropUnderPathway() throws InterruptedException {
+		loginPage.adminLogin();
+		String pathwayName = "Test Card for Pathway";
+		String CardNameToMove = "Test Card for Pathway A";
+		int positionNumber = 2;
+		testData = getTestData(PAATHWAY_TEST_DATA);
+		pathwayService = getPage(PathwayService.class, page).createPathway(pathwayName, testData.getJSONArray("cards"))
+				.moverCardUnderPathway(CardNameToMove, positionNumber);
+		Assert.assertEquals(pathwayService.getCardNameByCardNumber(positionNumber), CardNameToMove,
+				"Card position is not correct");
+	}
+
+	@Test(priority = 9)
+	@Description("This test case fetch column name from the table"+
+			"In order to run this case ake sure that VPN is working properly")
+	public void getColumnNameFromSourcesTable() throws ClassNotFoundException, SQLException {
+		String url = "SELECT column_name FROM information_schema.columns WHERE table_name = 'sources' ORDER BY ordinal_position;";
+		logStep("Executing the query: " + url);
+		new DBUtils().printDBDetails(url);
+	}
+	
+	
+	
+/*	@Test()
+	@Description("Complete case - In this test case existing users are deleted"+
+			"Users file is downloaded and uploaded with user details. "
+			+ "After uploading users details users are onboarded after fetchng the provided in the mail box."
+			)
+	public void testUserOnboarding() {
+		loginPage.adminLogin();
+		testData = getTestData(ADMIN_PAGE_TEST_DATA);
+		getPage(AdminService.class, page).openAdminAccountTab()
+				.downloadSampleFileAndUploadUserDetails1(testData.getJSONArray("new_user_data"))
+				.getEmailConfirmationAndUserOnBoarding(testData);
+
+	}
+	@Test
+	@Description("Complete case : Part -1 In this test case Toast message is verified after creating the card"
+			+"Part -2 In this test case card is assigned to self with calendar"
+			+"Part -3 In this test case card image is compared"
+			)
+	public void testCreateImageCard() throws InterruptedException {
+		loginPage.adminLogin();
+		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
+		testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
+
+		Assert.assertEquals(cardService.getToastMessageAfterSavingCard1(),
+				"Your card has been published publicly and will be accessible to everyone.", "Toast message not found");
+		cardService.clickOnSelfAssignCardWithDate(page, testCard, "6-November-2024", "7-November-2024");
+		getPage(HomePageService.class, page).cardSearch(testCard);
+		System.out.println(cardService.getCardImageHammingDistance(testCard, page, testData));
+		Assert.assertTrue(cardService.getCardImageHammingDistance(testCard, page, testData) <= 2,
+				"Images are not identical");
+
+	}
+	*/
+}

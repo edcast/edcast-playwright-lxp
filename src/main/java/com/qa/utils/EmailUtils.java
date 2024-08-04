@@ -1,7 +1,12 @@
 package com.qa.utils;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.Listeners;
+
+import io.qameta.allure.testng.AllureTestNg;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -15,7 +20,6 @@ import static com.qa.utils.Constants.FILE_PATH.FILE_DOWNLOADED;
 public class EmailUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
 
 	public enum FolderName {
 

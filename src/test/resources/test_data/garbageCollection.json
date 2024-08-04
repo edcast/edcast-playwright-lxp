@@ -1,0 +1,9 @@
+{
+	"data_to_delete": [
+		[
+			"test-output/jquery-3.6.0.min.js",
+			"testng-reports.css"
+		]
+	]
+	
+}

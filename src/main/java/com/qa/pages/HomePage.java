@@ -30,10 +30,10 @@ public class HomePage extends PageBase {
 	private String nextMonthOnCalendar = "//*[@aria-label='Next Month']";
 	private String assignButton = "button:has-text('Assign')";
 	private String dueDateCalendar = "//*[text()='Due Date: ']//span[text()='Select Date']";
-	private String meTab ="//*[@class='menu-items-wrapper']//a[text()='ME']";
-	private String skillsPassport ="//button[@role='tab' and text()='Skills Passport']";
-
-	
+	private String meTab = "//*[@class='menu-items-wrapper']//a[text()='ME']";
+	private String skillsPassport = "//button[@role='tab' and text()='Skills Passport']";
+	private String pathwayText = "text=A learning experience defined by a sequence of SmartCards.";
+	private String getTranscriptButton = "button:has-text('Get Transcript')";
 
 	private String calendarDate(String date) {
 		return getLocatorWithParam("//div[@class='react-datepicker__week']//div[text()='%s']", date);
@@ -51,9 +51,13 @@ public class HomePage extends PageBase {
 
 	public String getLocatorWithParam(String loc, String... val) {
 		String value = String.format(loc, val);
-		System.out.println(value);
 		return value;
 
+	}
+
+	public HomePage clickGetTranscript() {
+		page.locator(getTranscriptButton).click();
+		return new HomePage(page);
 	}
 
 	public HomePage search(String searchTxt) {
@@ -62,12 +66,19 @@ public class HomePage extends PageBase {
 	}
 
 	public SmartCardPage clickSmartCard() {
-		page.waitForTimeout(2000); // Wait for 5 seconds
+		page.waitForTimeout(2000);
 		page.locator(smartCardText).click();
 		return new SmartCardPage(page);
 	}
 
+	public SmartCardPage clickPathway() {
+		page.waitForTimeout(2000);
+		page.locator(pathwayText).click();
+		return new SmartCardPage(page);
+	}
+
 	public HomePage clickOnCreateButton() {
+		page.waitForTimeout(2000);
 		page.locator(createButton).click();
 		return new HomePage(page);
 	}
@@ -93,18 +104,17 @@ public class HomePage extends PageBase {
 
 	public HomePageService fillDefaultOnboardingInfo(Page page) {
 		try {
-		page.locator(defaultOnboardingCheckbox).click();
-		page.click(clickOnNextButton);
-		page.locator(selectGoal).fill(testData.getString("select-goal-fill"));
-		page.locator(String.format("xpath=//div[text()='%s']", testData.getString("select-goal"))).click();
-		page.selectOption(selectLevel, testData.getString("select-level"));
-		page.click(clickOnAdd);
-		page.click(clickOnNextButton);
-		page.click(clickOnSkip);
-		page.locator(letsGetStarted).click();
-		}
-		catch(Exception e) {
-			
+			page.locator(defaultOnboardingCheckbox).click();
+			page.click(clickOnNextButton);
+			page.locator(selectGoal).fill(testData.getString("select-goal-fill"));
+			page.locator(String.format("xpath=//div[text()='%s']", testData.getString("select-goal"))).click();
+			page.selectOption(selectLevel, testData.getString("select-level"));
+			page.click(clickOnAdd);
+			page.click(clickOnNextButton);
+			page.click(clickOnSkip);
+			page.locator(letsGetStarted).click();
+		} catch (Exception e) {
+
 		}
 		return new HomePageService(page);
 
@@ -116,16 +126,17 @@ public class HomePage extends PageBase {
 
 	}
 
-
-	
-	
 	public void clickSkillsPassport() {
 		page.locator(meTab).click();
-		page.locator(skillsPassport).click();	
-		//page.locator(getTranscript).click();
-		
-		
+		page.locator(skillsPassport).click();
+		try {
+			page.locator(getTranscriptButton).click();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 	}
+
 	public HomePageService clickOnCardAssign(Page page, String startDate, String endDate) {
 		try {
 			page.locator(clickOn3Dots).click();
@@ -154,4 +165,9 @@ public class HomePage extends PageBase {
 
 	}
 
+	public Boolean IsAssignToMePresent() {
+		page.locator(clickOn3Dots).click();
+		return page.locator(clickOnAssignToMe).isVisible();
+
+	}
 }

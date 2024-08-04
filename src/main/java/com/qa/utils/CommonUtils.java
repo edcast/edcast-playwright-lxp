@@ -6,20 +6,28 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import static com.qa.utils.Constants.FILE_PATH.FILE_DOWNLOADED;
+import org.testng.annotations.Listeners;
 
+import static com.qa.utils.Constants.FILE_PATH.FILE_DOWNLOADED;
 
 import com.google.gson.Gson;
 
-public class CommonUtils  {
+import io.qameta.allure.testng.AllureTestNg;
+
+public class CommonUtils {
 	public void cleanAndWriteCSV(String inputFilePath, String outputFilePath, JSONArray newRow) {
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
@@ -51,27 +59,28 @@ public class CommonUtils  {
 			e.printStackTrace();
 		}
 	}
-	public String  readContentFromPDF(String fileName){
-		
-		
-		
-		String pdfFileInfo = null ;
-	try {		
-		
-        File file = new File(FILE_DOWNLOADED+fileName);
-        PDDocument document = PDDocument.load(file);
-        PDFTextStripper pdfStripper = new PDFTextStripper();
-        pdfFileInfo = pdfStripper.getText(document);
-        System.out.println("Text in the PDF: "+ pdfFileInfo);
-        document.close();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-	return pdfFileInfo;
-}
-	private static void writeLine(BufferedWriter writer, String[] values) throws IOException {
+
+	public String readContentFromPDF(String fileName) {
+
+		String pdfFileInfo = null;
+		try {
+
+			File file = new File(FILE_DOWNLOADED + fileName);
+			PDDocument document = PDDocument.load(file);
+			PDFTextStripper pdfStripper = new PDFTextStripper();
+			pdfFileInfo = pdfStripper.getText(document);
+			System.out.println("Text in the PDF: " + pdfFileInfo);
+			document.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return pdfFileInfo;
+	}
+
+	public  static void writeLine(BufferedWriter writer, String[] values) throws IOException {
 		String line = String.join(",", values);
 		writer.write(line);
 		writer.newLine();
 	}
+
 }
