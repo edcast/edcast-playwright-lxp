@@ -6,6 +6,8 @@ import java.io.FileReader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import com.microsoft.playwright.Page;
+
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -37,4 +39,9 @@ public class PageBase {
 			e.printStackTrace();
 		}
 	}
+	public void pause(Page page,int waitInSeconds) {		
+			page.waitForTimeout(waitInSeconds*1000);		
+	}
+	
+	
 }

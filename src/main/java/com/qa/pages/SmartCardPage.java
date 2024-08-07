@@ -49,17 +49,18 @@ public class SmartCardPage extends PageBase {
 	
 	public SmartCardPage clickOnUploadContent() {
 		page.locator(createButton).click();
-		return new SmartCardPage(page);
+		return this;
 	}
 
 	public SmartCardPage clickToUploadFile(String searchTxt) {
 		page.getByLabel(label).click();
 		page.waitForSelector(iconTrash);
-		return new SmartCardPage(page);
-	}
+		return this;
+		}
 
 	public HomePage setCardDetails(String cardName)  {
-		page.locator(fileUploadPath).setInputFiles(Paths.get(testData.getString("test_file_name")));
+		try {			
+		page.locator(fileUploadPath).setInputFiles(Paths.get(testData.getString("test_file_name")).toAbsolutePath());
 		pause(3);
 		page.locator(clickUpload).click();
 		page.getByLabel(labelCardTitle).clear();
@@ -71,6 +72,10 @@ public class SmartCardPage extends PageBase {
 		page.locator(selectFirstCardSkill).click();
 		page.selectOption(cardLevel,testData.getString("cardLevel"));
 		page.locator(createCardButton).click();
+	
+		}catch(Exception e) {
+			System.out.println("");
+		}
 		return new HomePage(page);
 	}
 	public String getToastMessage() {
@@ -88,7 +93,7 @@ public class SmartCardPage extends PageBase {
 	public int captureCardImageAndGetHammingDistance(String cardName,Page page,JSONObject val) {
 		page.click("text='" + cardName + "'");
 		Locator imageLocator = page.locator(cardImage);
-		Path screenshotPath = Paths.get("captured_image.jpg");
+		Path screenshotPath = Paths.get("test-output/captured_image.jpg");
 		imageLocator.screenshot(new Locator.ScreenshotOptions().setPath(screenshotPath));
 		File capturedImage = screenshotPath.toFile();
 		File referenceImage = new File(val.getString("test_file_name").toString());

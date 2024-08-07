@@ -20,9 +20,10 @@ public class Constants {
 	}
 	
 	public interface FILE_PATH{
-		String DOWNLOADED_USER_FILE_PATH = "src/test/resources/download/csv_files/userSampleFile.csv";
-		String USER_SAMPLE_FILE_UPDATED ="src/test/resources/csv_files/loginUpdatedFile.csv";
-		String FILE_DOWNLOADED ="src/test/resources/download/";
+		String DOWNLOADED_USER_FILE_PATH = "test-output/csv_files/userSampleFile.csv";
+		String USER_SAMPLE_FILE_UPDATED ="test-output/csv_files/loginUpdatedFile.csv";
+		String FILE_DOWNLOADED ="test-output/";
+		String FILE_UPLOAD ="test-output/";
 
 
 	}

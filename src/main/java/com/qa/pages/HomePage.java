@@ -57,12 +57,12 @@ public class HomePage extends PageBase {
 
 	public HomePage clickGetTranscript() {
 		page.locator(getTranscriptButton).click();
-		return new HomePage(page);
+		return this;
 	}
 
 	public HomePage search(String searchTxt) {
 		page.locator(search).fill(searchTxt);
-		return new HomePage(page);
+		return this;
 	}
 
 	public SmartCardPage clickSmartCard() {
@@ -80,12 +80,12 @@ public class HomePage extends PageBase {
 	public HomePage clickOnCreateButton() {
 		page.waitForTimeout(2000);
 		page.locator(createButton).click();
-		return new HomePage(page);
+		return this;
 	}
 
 	public HomePage clickOnMoreButton() {
 		page.locator(moreButton).click();
-		return new HomePage(page);
+		return this;
 	}
 
 	public AdminPage clickOnAdminButton() {

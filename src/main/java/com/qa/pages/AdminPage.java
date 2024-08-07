@@ -34,17 +34,17 @@ public class AdminPage extends PageBase {
 
 	public AdminPage clickOnAccountTab() {
 		page.locator(accountButton).click();
-		return new AdminPage(page);
+		return this;
 	}
 
 	public AdminPage clickOnUsersTab() {
 		page.locator(usersButton).click();
-		return new AdminPage(page);
+		return this;
 	}
 
 	public AdminPage clickOnAddUsersButton() {
 		customWaitToClickForSelector(addUserButton);
-		return new AdminPage(page);
+		return this;
 	}
 
 	public AdminPage downloadUsersSampleFile() {
@@ -56,7 +56,7 @@ public class AdminPage extends PageBase {
 		Path targetPath = Paths.get(DOWNLOADED_USER_FILE_PATH);
 		download.saveAs(targetPath);
 		System.out.println("File saved to: " + targetPath);
-		return new AdminPage(page);
+		return this;
 	}
 
 	public AdminPage uploadSampleFileWithUsersDetails(JSONArray val) {
@@ -64,7 +64,7 @@ public class AdminPage extends PageBase {
 		page.locator(uploadCSVFile).setInputFiles(Paths.get(USER_SAMPLE_FILE_UPDATED));
 		page.locator(clickOnPreviewButton).click();
 		customWaitToClickForSelector(clickOnImportButton);
-		return new AdminPage(page);
+		return this;
 	}
 
 	public void customWaitToClickForSelector(String locator) {
@@ -99,7 +99,7 @@ public class AdminPage extends PageBase {
 			}
 
 		});
-		return new AdminPage(page);
+		return this;
 	}
 
 }

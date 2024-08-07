@@ -48,7 +48,7 @@ public class Trautomationv extends BaseTest {
 	@Description("This test case checks that only one user session is maintained.")
 	public void testConcurrentUserTest() throws InterruptedException {
 		String loginUrl = "https://trautomationv11.cmnetwork.co/user/login";
-		String expectedUrlAfterLogin = "https://trautomationv11.cmnetwork.co1/";
+		String expectedUrlAfterLogin = "https://trautomationv11.cmnetwork.co/";
 		loginPage.trautomationvLogin(page);
 		verifyPageUrl(expectedUrlAfterLogin, page);
 		Page pageOnNewBrowser = openNewBrowser(loginUrl);
@@ -57,22 +57,7 @@ public class Trautomationv extends BaseTest {
 
 	}
 	
-	@Test
-	public void getFileNames() throws IOException {
-		abcd();
-
-
-	}
-	public void abcd() throws IOException {
-		String val = null;
-		Path path1= path;
-		System.out.println(path1);
-		try (Stream<Path> paths = Files.list(Paths.get("allure-report\\data"))) {
-			paths.filter(Files::isRegularFile)
-					.forEach(path -> System.out.println(path.getFileName().toString()));}
-			//System.out.println(PlaywrightFactory.path.toString() + "\\" + path.getFileName().toString());
-	}
-
+	
 	public void verifyPageUrl(String expectedUrl, Page page) {
 		String url;
 		int count = 5;

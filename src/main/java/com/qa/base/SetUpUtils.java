@@ -47,7 +47,7 @@ public class SetUpUtils extends PlaywrightFactory {
 		config = loadProperties("config.properties");
 		play = new PlaywrightFactory();
 		page = PlaywrightFactory.getPage(config.getProperty(config.getProperty("env") + ".baseUrl"),
-				config.getProperty(config.getProperty("env") + ".browserType"), config);
+				config.getProperty("browserType"), config);
 		loginPage = new LoginPage(page, config);
 
 	}
@@ -107,7 +107,7 @@ public class SetUpUtils extends PlaywrightFactory {
 		List<String> ls = new ArrayList<>();
 		try (Stream<Path> paths = Files.list(Paths.get(folderPath))) {
 			paths.filter(Files::isRegularFile)
-					.forEach(path -> System.out.println(ls.add(path.getFileName().toString())));
+					.forEach(path -> ls.add(path.getFileName().toString()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
