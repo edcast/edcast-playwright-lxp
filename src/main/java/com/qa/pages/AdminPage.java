@@ -32,23 +32,27 @@ public class AdminPage extends PageBase {
 		this.page = page;
 	}
 
+	private Page getPage() {
+		return page;
+	}
+
 	public AdminPage clickOnAccountTab() {
-		page.locator(accountButton).click();
-		return new AdminPage(page);
+		getPage().locator(accountButton).click();
+		return this;
 	}
 
 	public AdminPage clickOnUsersTab() {
-		page.locator(usersButton).click();
-		return new AdminPage(page);
+		getPage().locator(usersButton).click();
+		return this;
 	}
 
 	public AdminPage clickOnAddUsersButton() {
 		customWaitToClickForSelector(addUserButton);
-		return new AdminPage(page);
+		return this;
 	}
 
 	public AdminPage downloadUsersSampleFile() {
-		Download download = page.waitForDownload(() -> {
+		Download download = getPage().waitForDownload(() -> {
 			customWaitToClickForSelector(sampleDownload);
 		});
 		Path downloadPath = download.path();
@@ -56,15 +60,15 @@ public class AdminPage extends PageBase {
 		Path targetPath = Paths.get(DOWNLOADED_USER_FILE_PATH);
 		download.saveAs(targetPath);
 		System.out.println("File saved to: " + targetPath);
-		return new AdminPage(page);
+		return this;
 	}
 
 	public AdminPage uploadSampleFileWithUsersDetails(JSONArray val) {
 		new CommonUtils().cleanAndWriteCSV(DOWNLOADED_USER_FILE_PATH, USER_SAMPLE_FILE_UPDATED, val);
-		page.locator(uploadCSVFile).setInputFiles(Paths.get(USER_SAMPLE_FILE_UPDATED));
-		page.locator(clickOnPreviewButton).click();
+		getPage().locator(uploadCSVFile).setInputFiles(Paths.get(USER_SAMPLE_FILE_UPDATED));
+		getPage().locator(clickOnPreviewButton).click();
 		customWaitToClickForSelector(clickOnImportButton);
-		return new AdminPage(page);
+		return this;
 	}
 
 	public void customWaitToClickForSelector(String locator) {
@@ -73,7 +77,7 @@ public class AdminPage extends PageBase {
 			count--;
 
 			try {
-				page.locator(locator).click();
+				getPage().locator(locator).click();
 				return;
 			} catch (Exception e) {
 				System.out.println(e);
@@ -88,18 +92,18 @@ public class AdminPage extends PageBase {
 		IntStream.range(0, newRow.length()).forEach(i -> {
 			JSONArray newUserData = newRow.getJSONArray(i);
 			String[] stringArray = new Gson().fromJson(newUserData.toString(), String[].class);
-			page.locator(searchBox).fill(stringArray[2]);
+			getPage().locator(searchBox).fill(stringArray[2]);
 
 			try {
-				page.locator("xpath=//td[text()='" + stringArray[2] + "']/..//input").click();
-				page.locator(deleteUser).click();
-				page.locator(deleteButtonPromptYes).click();
+				getPage().locator("xpath=//td[text()='" + stringArray[2] + "']/..//input").click();
+				getPage().locator(deleteUser).click();
+				getPage().locator(deleteButtonPromptYes).click();
 			} catch (Exception e) {
 				logStep("User Email " + stringArray[2] + " not found under existing user list");
 			}
 
 		});
-		return new AdminPage(page);
+		return this;
 	}
 
 }

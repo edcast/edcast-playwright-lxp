@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Properties;
 
-import com.qa.pages.LoginPage;
 import org.testng.annotations.Listeners;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.BrowserContext;
@@ -18,15 +17,11 @@ import io.qameta.allure.testng.AllureTestNg;
 @Listeners({AllureTestNg.class})
 public class PlaywrightFactory {
 
-    protected static final ThreadLocal<Playwright> playwrightThreadLocal = new ThreadLocal<>();
-    protected static final ThreadLocal<Page> pageThreadLocal = new ThreadLocal<>();
-    protected static final ThreadLocal<LoginPage> loginPageThreadLocal = new ThreadLocal<>();
-    protected static final ThreadLocal<Browser> browserThreadLocal = new ThreadLocal<>();
-    protected static final ThreadLocal<BrowserContext> browserContextThreadLocal = new ThreadLocal<>();
+    protected static final ThreadLocal<PlaywrightSession> playwrightSessionThreadLocal = new ThreadLocal<>();
     protected static Path path;
 
     // @Parameters({"appURL", "browserType"})
-    public static synchronized Page getPage(String appURL, String browserType, Properties config) {
+    public static Page createPage(String appURL, String browserType, Properties config) {
         Playwright playwright = Playwright.create();
         Boolean headlessState = Boolean.parseBoolean(config.getProperty("headlessState"));
         Browser browser = null;
@@ -52,27 +47,30 @@ public class PlaywrightFactory {
             browserContext = browser.newContext();
         }
         Page page = browserContext.newPage();
-        browserContextThreadLocal.set(browserContext);
         page.setDefaultTimeout(Integer.parseInt(config.getProperty("setDefaultTime")) * 1000);
         page.navigate(appURL);
-        pageThreadLocal.set(page);
-        playwrightThreadLocal.set(playwright);
-        browserThreadLocal.set(browser);
+        playwrightSessionThreadLocal.set(new PlaywrightSession(playwright, browser, browserContext, page));
         return page;
     }
 
     public static Page openNewTab(String url) {
-        Page secondPage = browserContextThreadLocal.get().newPage();
+        PlaywrightSession playwrightSession = playwrightSessionThreadLocal.get();
+        Page secondPage = playwrightSession.getBrowserContext().newPage();
         secondPage.navigate(url);
         secondPage.bringToFront();
+        playwrightSession.setPage(secondPage);
+        playwrightSessionThreadLocal.set(playwrightSession);
         return secondPage;
     }
 
     public static Page openNewBrowser(String url) {
-        BrowserContext browserContext = browserThreadLocal.get().newContext();
-        Page page = browserContext.newPage();
+        PlaywrightSession playwrightSession = playwrightSessionThreadLocal.get();
+        Page page = playwrightSession.getBrowserContext().newPage();
         page.navigate(url);
         page.bringToFront();
+        playwrightSession.setPage(page);
+        playwrightSessionThreadLocal.set(playwrightSession);
         return page;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.qa.web.service;
 
+import com.qa.base.PlaywrightSession;
 import com.qa.pages.AdminPage;
 import com.qa.pages.BaseTest;
 import com.qa.pages.HomePage;
@@ -16,40 +17,36 @@ import com.qa.base.PlaywrightFactory;
 @Listeners({AllureTestNg.class})
 
 public class AdminService extends BaseTest {
-    Page page = pageThreadLocal.get();
 
-    public AdminService(Page page) {
-        this.page = page;
-        homePage = new HomePage(page);
-        adminPage = new AdminPage(page);
-    }
-
-    public AdminService openAdminAccountTab() {
+    public AdminService openAdminAccountTab(Page page) {
+        HomePage homePage = new HomePage(page);
         homePage.clickOnMoreButton();
-        adminPage = homePage.clickOnAdminButton();
+        AdminPage adminPage = homePage.clickOnAdminButton();
         adminPage.clickOnAccountTab();
         adminPage.clickOnUsersTab();
-        return this;
+        return new AdminService();
     }
 
-    public <T extends BaseTest> AdminService downloadSampleFileAndUploadUserDetails1(JSONArray val) {
+    public <T extends BaseTest> AdminService downloadSampleFileAndUploadUserDetails1(Page page, JSONArray val) {
+        AdminPage adminPage = new AdminPage(page);
         adminPage.clickOnUsersTab();
         adminPage.deleteExistingUser(val);
         adminPage.clickOnAddUsersButton();
         adminPage.downloadUsersSampleFile();
         adminPage.uploadSampleFileWithUsersDetails(val);
-        return this;
+        return new AdminService();
     }
 
-    public <T extends BaseTest> AdminService deleteExistingUser(JSONArray val) {
+    public <T extends BaseTest> AdminService deleteExistingUser(Page page, JSONArray val) {
+        AdminPage adminPage = new AdminPage(page);
         adminPage.clickOnUsersTab();
         adminPage.deleteExistingUser(val);
-        return this;
+        return new AdminService();
     }
 
-    public AdminService getEmailConfirmationAndUserOnBoarding(JSONObject testData) {
+    public AdminService getEmailConfirmationAndUserOnBoarding(Page page, JSONObject testData) {
         JSONArray val = testData.getJSONArray("new_user_data");
-        homePageService = new HomePageService(page);
+        HomePageService homePageService = new HomePageService();
         for (int i = 0; i <= val.length() - 1; i++) {
             JSONArray newRow11 = val.getJSONArray(i);
             String[] stringArray = new Gson().fromJson(newRow11.toString(), String[].class);
@@ -59,8 +56,10 @@ public class AdminService extends BaseTest {
             homePageService.fillDefaultOnboardingInfo(page);
             Assert.assertTrue(homePageService.getUserNameAfterFirstLoginOnScreen(page)
                     .contains(stringArray[0] + " " + stringArray[1]), "User Name on the dashboard is not correct");
-
+            PlaywrightSession playwrightSession = playwrightSessionThreadLocal.get();
+            playwrightSession.setPage(page);
+            playwrightSessionThreadLocal.set(playwrightSession);
         }
-        return this;
+        return new AdminService();
     }
 }

@@ -71,7 +71,7 @@ public class PathwayPage extends PageBase {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return new PathwayPage(page);
+		return this;
 	}
 
 	public PathwayPage enterSmartCardSearchAndCheck(JSONArray cardsArray) {

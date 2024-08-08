@@ -8,39 +8,33 @@ import com.qa.utils.EmailUtils;
 import org.json.JSONObject;
 
 public class HomePageService extends BaseTest {
-	
-	Page page;
 
-	public HomePageService(Page page) {
-		this.page = page;
-		homePage = new HomePage(page);
-
-	}
-
-	public HomePageService cardSearch(String cardName) {
-
+	public HomePageService cardSearch(Page page, String cardName) {
+		HomePage homePage = new HomePage(page);
 		return homePage.cardSearchOnHomePage(cardName);
 
 	}
 
 	public HomePageService fillDefaultOnboardingInfo(Page page) {
-
+		HomePage homePage = new HomePage(page);
 		return homePage.fillDefaultOnboardingInfo(page);
 
 	}
 
 	public String getUserNameAfterFirstLoginOnScreen(Page page) {
-
+		HomePage homePage = new HomePage(page);
 		return homePage.getUserNameAfterFirstLogin(page);
 
 	}
 
-	public HomePageService clickSkillsPassport() {
+	public HomePageService clickSkillsPassport(Page page) {
+		HomePage homePage = new HomePage(page);
 		homePage.clickSkillsPassport();
 		return this;
 
 	}
-	public HomePageService clickGetTranscript() {
+	public HomePageService clickGetTranscript(Page page) {
+		HomePage homePage = new HomePage(page);
 		homePage.clickSkillsPassport();
 		return this;
 

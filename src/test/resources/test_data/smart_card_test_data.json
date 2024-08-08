@@ -1,5 +1,5 @@
 {
-	"test_file_name":"sample_image.jpg",
+	"test_file_name":"src/test/resources/test_data/upload/sample_image.jpg",
 	"cardLevel":"Advanced",
 	"cardSkills":"proces"
 }

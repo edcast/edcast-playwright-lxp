@@ -24,27 +24,22 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
 import com.microsoft.playwright.Page;
-import com.qa.pages.LoginPage;
-import com.qa.pages.PathwayPage;
 import com.qa.utils.PlayWrightUtils;
-import com.qa.web.service.PathwayService;
 
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 public class SetUpUtils extends PlaywrightFactory {
 
-    protected PathwayService pathwayService;
-    protected PathwayPage pathwayPage;
+//    protected PathwayService pathwayService;
+//    protected PathwayPage pathwayPage;
     protected static Properties config;
 
     @BeforeMethod
     public void setUp() {
         config = loadProperties("config.properties");
-        Page page = PlaywrightFactory.getPage(config.getProperty(config.getProperty("env") + ".baseUrl"),
-                config.getProperty(config.getProperty("env") + ".browserType"), config);
-        LoginPage loginPage = new LoginPage(page, config);
-        loginPageThreadLocal.set(loginPage);
+        PlaywrightFactory.createPage(config.getProperty(config.getProperty("env") + ".baseUrl"),
+                config.getProperty("browserType"), config);
     }
 
     public <T> T getPage(Class<T> pageClass, Page page) {
@@ -60,15 +55,13 @@ public class SetUpUtils extends PlaywrightFactory {
 
     @AfterMethod
     public void tearDown() {
-        if (pageThreadLocal.get() != null) {
-            pageThreadLocal.get().close();
-            pageThreadLocal.remove();
-            browserThreadLocal.get().close();
-            browserThreadLocal.remove();
-            playwrightThreadLocal.get().close();
-            playwrightThreadLocal.remove();
-            browserContextThreadLocal.get().close();
-            browserContextThreadLocal.remove();
+        PlaywrightSession playwrightSession = playwrightSessionThreadLocal.get();
+        if (playwrightSession != null) {
+            playwrightSession.getPage().close();
+            playwrightSession.getBrowserContext().close();
+            playwrightSession.getBrowser().close();
+            playwrightSession.getPlaywright().close();
+            playwrightSessionThreadLocal.remove();
         }
     }
 
@@ -98,7 +91,7 @@ public class SetUpUtils extends PlaywrightFactory {
             if (!result.isSuccess()) {
                 String screenshotPath = config.getProperty("failure-screenshot-path")
                         + result.getMethod().getMethodName() + ".png";
-                PlayWrightUtils.captureScreenshot(pageThreadLocal.get(), screenshotPath);
+                PlayWrightUtils.captureScreenshot(playwrightSessionThreadLocal.get().getPage(), screenshotPath);
 
             }
     }

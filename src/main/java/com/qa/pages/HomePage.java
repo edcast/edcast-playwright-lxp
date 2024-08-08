@@ -49,6 +49,10 @@ public class HomePage extends PageBase {
 		testData = getTestData(HOME_PAGE_TEST_DATA);
 	}
 
+	private Page getPage() {
+		return page;
+	}
+
 	public String getLocatorWithParam(String loc, String... val) {
 		String value = String.format(loc, val);
 		return value;
@@ -56,49 +60,49 @@ public class HomePage extends PageBase {
 	}
 
 	public HomePage clickGetTranscript() {
-		page.locator(getTranscriptButton).click();
-		return new HomePage(page);
+		getPage().locator(getTranscriptButton).click();
+		return this;
 	}
 
 	public HomePage search(String searchTxt) {
-		page.locator(search).fill(searchTxt);
-		return new HomePage(page);
+		getPage().locator(search).fill(searchTxt);
+		return this;
 	}
 
 	public SmartCardPage clickSmartCard() {
-		page.waitForTimeout(2000);
-		page.locator(smartCardText).click();
-		return new SmartCardPage(page);
+		getPage().waitForTimeout(2000);
+		getPage().locator(smartCardText).click();
+		return new SmartCardPage(getPage());
 	}
 
-	public SmartCardPage clickPathway() {
-		page.waitForTimeout(2000);
-		page.locator(pathwayText).click();
-		return new SmartCardPage(page);
+	public PathwayPage clickPathway() {
+		getPage().waitForTimeout(2000);
+		getPage().locator(pathwayText).click();
+		return new PathwayPage(getPage());
 	}
 
 	public HomePage clickOnCreateButton() {
-		page.waitForTimeout(2000);
-		page.locator(createButton).click();
-		return new HomePage(page);
+		getPage().waitForTimeout(2000);
+		getPage().locator(createButton).click();
+		return this;
 	}
 
 	public HomePage clickOnMoreButton() {
-		page.locator(moreButton).click();
-		return new HomePage(page);
+		getPage().locator(moreButton).click();
+		return this;
 	}
 
 	public AdminPage clickOnAdminButton() {
-		page.locator(adminButton).click();
-		return new AdminPage(page);
+		getPage().locator(adminButton).click();
+		return new AdminPage(getPage());
 	}
 
 	public HomePageService cardSearchOnHomePage(String cardName) {
-		page.fill(searchContent, cardName);
-		page.click(searchIn);
-		page.click(apply);
-		page.click("text='" + cardName + "'");
-		return new HomePageService(page);
+		getPage().fill(searchContent, cardName);
+		getPage().click(searchIn);
+		getPage().click(apply);
+		getPage().click("text='" + cardName + "'");
+		return new HomePageService();
 
 	}
 
@@ -116,7 +120,7 @@ public class HomePage extends PageBase {
 		} catch (Exception e) {
 
 		}
-		return new HomePageService(page);
+		return new HomePageService();
 
 	}
 
@@ -127,10 +131,10 @@ public class HomePage extends PageBase {
 	}
 
 	public void clickSkillsPassport() {
-		page.locator(meTab).click();
-		page.locator(skillsPassport).click();
+		getPage().locator(meTab).click();
+		getPage().locator(skillsPassport).click();
 		try {
-			page.locator(getTranscriptButton).click();
+			getPage().locator(getTranscriptButton).click();
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -161,13 +165,13 @@ public class HomePage extends PageBase {
 
 			System.out.println("");
 		}
-		return new HomePageService(page);
+		return new HomePageService();
 
 	}
 
 	public Boolean IsAssignToMePresent() {
-		page.locator(clickOn3Dots).click();
-		return page.locator(clickOnAssignToMe).isVisible();
+		getPage().locator(clickOn3Dots).click();
+		return getPage().locator(clickOnAssignToMe).isVisible();
 
 	}
 }
