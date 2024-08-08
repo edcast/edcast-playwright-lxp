@@ -5,6 +5,8 @@ import com.qa.pages.BaseTest;
 import com.qa.pages.HomePage;
 import com.qa.utils.CommonUtils;
 import com.qa.utils.EmailUtils;
+import org.json.JSONObject;
+
 public class HomePageService extends BaseTest {
 	
 	Page page;
@@ -45,7 +47,7 @@ public class HomePageService extends BaseTest {
 	}
 	
 	
-	public String downloadPDFContent() {
+	public String downloadPDFContent(JSONObject testData) {
 
 		new EmailUtils().getEmailInfo(config.getProperty("picasso.adminEmail1"), config.getProperty("picasso.adminGmailKeyAccess"),
 				testData.getString("emailSubjectLine"));
@@ -53,7 +55,7 @@ public class HomePageService extends BaseTest {
 		return pdfContent;
 	}
 
-	public void matchPDFContent(String pdfContent) {
+	public void matchPDFContent(String pdfContent, JSONObject testData) {
 		for (Object key : testData.keySet()) {
 			String keyStr = (String) key;
 			Object value = testData.get(keyStr);

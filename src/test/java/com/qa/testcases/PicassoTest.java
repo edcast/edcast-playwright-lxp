@@ -6,6 +6,7 @@ import static com.qa.utils.Constants.Test_DATA.SKILL_PASSPORT_TEST_DATA;
 import static com.qa.utils.Constants.Test_DATA.SMART_CARD_TEST_DATA;
 import java.sql.SQLException;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -27,46 +28,43 @@ public class PicassoTest extends BaseTest {
 
 	@Description("Part -1 In this test case existing users are deleted")
 	public void testDeleteExistingUser() {
-		loginPage.adminLogin();
-		testData = getTestData(ADMIN_PAGE_TEST_DATA);
-		getPage(AdminService.class, page).openAdminAccountTab()
+		loginPageThreadLocal.get().adminLogin();
+		JSONObject testData = getTestData(ADMIN_PAGE_TEST_DATA);
+		getPage(AdminService.class, pageThreadLocal.get()).openAdminAccountTab()
 				.deleteExistingUser(testData.getJSONArray("new_user_data"));
-
 	}
 
 	@Test(priority = 2)
 	@Description("Part -2 Users file is downloaded and uploaded with user details. "
 			+ "After uploading users details users are onboarded after fetchng the link provided in the mail box.")
 	public void testDownloadUserFileAndUploadUsersDetailsAndUserOnboarding() {
-		loginPage.adminLogin();
-		testData = getTestData(ADMIN_PAGE_TEST_DATA);
-		getPage(AdminService.class, page).openAdminAccountTab()
+		loginPageThreadLocal.get().adminLogin();
+		JSONObject testData = getTestData(ADMIN_PAGE_TEST_DATA);
+		getPage(AdminService.class, pageThreadLocal.get()).openAdminAccountTab()
 				.deleteExistingUser(testData.getJSONArray("new_user_data"))
 				.downloadSampleFileAndUploadUserDetails1(testData.getJSONArray("new_user_data"))
 				.getEmailConfirmationAndUserOnBoarding(testData);
-
 	}
 
 	@Test(priority = 3)
 	@Description("Part -1 In this test case Toast message is verified after creating the card")
 	public void testVerifyToastMessage() throws InterruptedException {
-		loginPage.adminLogin();
+		loginPageThreadLocal.get().adminLogin();
 		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
-		testData = getTestData(SMART_CARD_TEST_DATA);
-		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
+		JSONObject testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, pageThreadLocal.get()).createCard(CardTypes.UPLOAD, testCard);
 		Assert.assertEquals(cardService.getToastMessageAfterSavingCard1(),
 				"Your card has been published publicly and will be accessible to everyone.", "Toast message not found");
 	}
 
 	@Test(priority = 4)
-
 	@Description("Part -2 In this test case card is assigned to self with calendar")
 	public void testSelfAssignCard() throws InterruptedException {
-		loginPage.adminLogin();
+		loginPageThreadLocal.get().adminLogin();
 		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
-		testData = getTestData(SMART_CARD_TEST_DATA);
-		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
-		cardService.clickOnSelfAssignCardWithDate(page, testCard, "6-November-2024", "7-November-2024");
+		JSONObject testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, pageThreadLocal.get()).createCard(CardTypes.UPLOAD, testCard);
+		cardService.clickOnSelfAssignCardWithDate(pageThreadLocal.get(), testCard, "6-November-2024", "7-November-2024");
 		cardService.isAssignToMeOptionPresent(testCard);
 		Assert.assertFalse(cardService.isAssignToMeOptionPresent(testCard),
 				"After assigning to me, Assign to me option not available");
@@ -74,15 +72,14 @@ public class PicassoTest extends BaseTest {
 	}
 
 	@Test(priority = 5)
-
 	@Description("Part -3 In this test case card image is compared")
-	public void testCardImageCompare() throws InterruptedException {
-		loginPage.adminLogin();
+	public void testCardImageCompare() {
+		loginPageThreadLocal.get().adminLogin();
 		String testCard = "Test_Card_ " + RandomStringUtils.randomAlphanumeric(15);
-		testData = getTestData(SMART_CARD_TEST_DATA);
-		cardService = getPage(CardService.class, page).createCard(CardTypes.UPLOAD, testCard);
-		getPage(HomePageService.class, page).cardSearch(testCard);
-		int hammingDistanceValue = cardService.getCardImageHammingDistance(testCard, page, testData);
+		JSONObject testData = getTestData(SMART_CARD_TEST_DATA);
+		cardService = getPage(CardService.class, pageThreadLocal.get()).createCard(CardTypes.UPLOAD, testCard);
+		getPage(HomePageService.class, pageThreadLocal.get()).cardSearch(testCard);
+		int hammingDistanceValue = cardService.getCardImageHammingDistance(testCard, pageThreadLocal.get(), testData);
 		Assert.assertTrue(hammingDistanceValue <= 3,
 				"Images are not identical: Hamming value is " + hammingDistanceValue);
 	}
@@ -93,10 +90,10 @@ public class PicassoTest extends BaseTest {
 
 	@Description("This test case checks PDF content after downloading content from the email.")
 	public void pdfContentTest() {
-		loginPage.memberLogin();
-		testData = getTestData(SKILL_PASSPORT_TEST_DATA);
-		homePageService = getPage(HomePageService.class, page).clickGetTranscript();
-		homePageService.matchPDFContent(homePageService.downloadPDFContent());
+		loginPageThreadLocal.get().memberLogin();
+		JSONObject testData = getTestData(SKILL_PASSPORT_TEST_DATA);
+		homePageService = getPage(HomePageService.class, pageThreadLocal.get()).clickGetTranscript();
+		homePageService.matchPDFContent(homePageService.downloadPDFContent(testData), testData);
 
 	}
 
@@ -107,7 +104,6 @@ public class PicassoTest extends BaseTest {
 	 * the code will work correctly.
 	 */
 	@Test(priority = 7)
-
 	@Description("This test case sends OTP on the registered phone.")
 	public void OTPTest() {
 		logStep("Starting the test: OTPTest");
@@ -119,15 +115,14 @@ public class PicassoTest extends BaseTest {
 	}
 
 	@Test(priority = 8)
-
 	@Description("This test case checks drag and drop feature")
 	public void testDragAndDropUnderPathway() throws InterruptedException {
-		loginPage.adminLogin();
+		loginPageThreadLocal.get().adminLogin();
 		String pathwayName = "Test Card for Pathway";
 		String CardNameToMove = "Test Card for Pathway A";
 		int positionNumber = 2;
-		testData = getTestData(PAATHWAY_TEST_DATA);
-		pathwayService = getPage(PathwayService.class, page).createPathway(pathwayName, testData.getJSONArray("cards"))
+		JSONObject testData = getTestData(PAATHWAY_TEST_DATA);
+		pathwayService = getPage(PathwayService.class, pageThreadLocal.get()).createPathway(pathwayName, testData.getJSONArray("cards"))
 				.moverCardUnderPathway(CardNameToMove, positionNumber);
 		Assert.assertEquals(pathwayService.getCardNameByCardNumber(positionNumber), CardNameToMove,
 				"Card position is not correct");
@@ -141,9 +136,7 @@ public class PicassoTest extends BaseTest {
 		logStep("Executing the query: " + url);
 		new DBUtils().printDBDetails(url);
 	}
-	
-	
-	
+
 /*	@Test()
 	@Description("Complete case - In this test case existing users are deleted"+
 			"Users file is downloaded and uploaded with user details. "
