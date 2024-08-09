@@ -1,5 +1,9 @@
 package com.qa.web.service;
 
+import java.util.Properties;
+
+import org.json.JSONObject;
+
 import com.microsoft.playwright.Page;
 import com.qa.pages.BaseTest;
 import com.qa.pages.HomePage;
@@ -15,9 +19,9 @@ public class HomePageService extends BaseTest {
 
 	}
 
-	public HomePageService cardSearch(String cardName) {
+	public HomePageService cardSearch(String cardName,Page page) {
 
-		return homePage.cardSearchOnHomePage(cardName);
+		return homePage.cardSearchOnHomePage(cardName,page);
 
 	}
 
@@ -45,7 +49,7 @@ public class HomePageService extends BaseTest {
 	}
 	
 	
-	public String downloadPDFContent() {
+	public String downloadPDFContent(JSONObject testData) {
 
 		new EmailUtils().getEmailInfo(config.getProperty("picasso.adminEmail1"), config.getProperty("picasso.adminGmailKeyAccess"),
 				testData.getString("emailSubjectLine"));
@@ -53,7 +57,7 @@ public class HomePageService extends BaseTest {
 		return pdfContent;
 	}
 
-	public void matchPDFContent(String pdfContent) {
+	public void matchPDFContent(String pdfContent,JSONObject testData) {
 		for (Object key : testData.keySet()) {
 			String keyStr = (String) key;
 			Object value = testData.get(keyStr);

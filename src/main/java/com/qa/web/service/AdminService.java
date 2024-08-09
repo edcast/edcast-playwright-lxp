@@ -63,7 +63,7 @@ public class AdminService extends BaseTest {
 	}
 	public <T extends BaseTest> AdminService deleteExistingUser(JSONArray val) {
 		adminPage.clickOnUsersTab();
-		adminPage.deleteExistingUser(val);
+		//adminPage.deleteExistingUser(val);
 		return this;
 	}
 	public AdminService getEmailConfirmationAndUserOnBoarding(JSONObject testData) {

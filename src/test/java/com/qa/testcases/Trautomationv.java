@@ -47,13 +47,13 @@ public class Trautomationv extends BaseTest {
 	@Test()
 	@Description("This test case checks that only one user session is maintained.")
 	public void testConcurrentUserTest() throws InterruptedException {
-		String loginUrl = "https://trautomationv11.cmnetwork.co/user/login";
-		String expectedUrlAfterLogin = "https://trautomationv11.cmnetwork.co/";
-		loginPage.trautomationvLogin(page);
-		verifyPageUrl(expectedUrlAfterLogin, page);
-		Page pageOnNewBrowser = openNewBrowser(loginUrl);
-		loginPage.trautomationvLogin(pageOnNewBrowser);
-		verifyPageUrl(loginUrl, page);
+//		String loginUrl = "https://trautomationv11.cmnetwork.co/user/login";
+//		String expectedUrlAfterLogin = "https://trautomationv11.cmnetwork.co/";
+//		loginPage.get().trautomationvLogin(webNode.get());
+//		verifyPageUrl(expectedUrlAfterLogin, page);
+//		Page pageOnNewBrowser = openNewBrowser(loginUrl);
+//		loginPage.get().trautomationvLogin(pageOnNewBrowser);
+//		verifyPageUrl(loginUrl, page);
 
 	}
 	

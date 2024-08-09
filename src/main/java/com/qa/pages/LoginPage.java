@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
+import com.qa.models.user.User;
 
 public class LoginPage extends BaseTest {
 	Page page;
@@ -18,9 +19,9 @@ public class LoginPage extends BaseTest {
 		this.config = config;
 	}
 
-	public HomePage adminLogin() {
-		page.getByLabel("Email").fill(config.getProperty("picasso.adminEmail"));
-		page.getByLabel("Password").fill(config.getProperty("picasso.adminPassword"));
+	public HomePage adminLogin(User user) {
+		page.getByLabel("Email").fill(user.getEmail());
+		page.getByLabel("Password").fill(user.getPassword());
 		page.click(loginCheckBoxId);
 		page.click(logInButton);
 		return new HomePage(page);

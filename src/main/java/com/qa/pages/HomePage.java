@@ -93,7 +93,7 @@ public class HomePage extends PageBase {
 		return new AdminPage(page);
 	}
 
-	public HomePageService cardSearchOnHomePage(String cardName) {
+	public HomePageService cardSearchOnHomePage(String cardName,Page page) {
 		page.fill(searchContent, cardName);
 		page.click(searchIn);
 		page.click(apply);
@@ -159,13 +159,13 @@ public class HomePage extends PageBase {
 			page.click(assignButton);
 		} catch (Exception e) {
 
-			System.out.println("");
+			System.out.println(e);
 		}
 		return new HomePageService(page);
 
 	}
 
-	public Boolean IsAssignToMePresent() {
+	public Boolean IsAssignToMePresent(Page page) {
 		page.locator(clickOn3Dots).click();
 		return page.locator(clickOnAssignToMe).isVisible();
 

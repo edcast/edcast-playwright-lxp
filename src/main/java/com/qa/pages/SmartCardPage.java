@@ -58,9 +58,9 @@ public class SmartCardPage extends PageBase {
 		return this;
 		}
 
-	public HomePage setCardDetails(String cardName)  {
+	public HomePage setCardDetails(String cardName, JSONObject data)  {
 		try {			
-		page.locator(fileUploadPath).setInputFiles(Paths.get(testData.getString("test_file_name")).toAbsolutePath());
+		page.locator(fileUploadPath).setInputFiles(Paths.get(data.getString("test_file_name")).toAbsolutePath());
 		pause(3);
 		page.locator(clickUpload).click();
 		page.getByLabel(labelCardTitle).clear();

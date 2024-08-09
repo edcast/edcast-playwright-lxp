@@ -34,23 +34,13 @@ import io.qameta.allure.Step;
 
 public class SetUpUtils extends PlaywrightFactory {
 
-	protected Page page;
-	protected LoginPage loginPage;
-	protected PlaywrightFactory play;
+	
+	//protected PlaywrightFactory play;
 	protected PathwayService pathwayService;
 	protected PathwayPage pathwayPage;
-	public static JSONObject testData;
-	protected static Properties config;
 
-	@BeforeMethod
-	public void setUp() {
-		config = loadProperties("config.properties");
-		play = new PlaywrightFactory();
-		page = PlaywrightFactory.getPage(config.getProperty(config.getProperty("env") + ".baseUrl"),
-				config.getProperty("browserType"), config);
-		loginPage = new LoginPage(page, config);
 
-	}
+
 
 	public <T> T getPage(Class<T> pageClass, Page page) {
 		try {
@@ -63,45 +53,38 @@ public class SetUpUtils extends PlaywrightFactory {
 
 	}
 
-	@AfterMethod
-	public void tearDown() {
 
-		page.close();
-		browser.close();
-		playwright.close();
 
-	}
-
-	@AfterMethod
-	public void testCaseFailureVideo(ITestResult result) {
-		if (Boolean.parseBoolean(config.getProperty("video-recording")))
-			if (!result.isSuccess()) {
-				List<String> ls = getFilesUnderFolder(PlaywrightFactory.path.toString());
-				String pathval = PlaywrightFactory.path + "/" + ls.get(0);
-				File file = new File(pathval);
-				try {
-					Allure.addAttachment("Test Case video file", new FileInputStream(file));
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				Allure.addAttachment("Test Case video file link", file.getAbsolutePath().toString());
-				System.out.println(file.getAbsolutePath());
-				logStep(file.getAbsolutePath());
-
-			}
-	}
-
-	@AfterMethod
-	public void failureScreenshot(ITestResult result) {
-		if (Boolean.parseBoolean(config.getProperty("failure-screenshot")))
-			if (!result.isSuccess()) {
-				String screenshotPath = config.getProperty("failure-screenshot-path")
-						+ result.getMethod().getMethodName() + ".png";
-				PlayWrightUtils.captureScreenshot(page, screenshotPath);
-
-			}
-	}
+//	@AfterMethod
+//	public void testCaseFailureVideo(ITestResult result) {
+//		if (Boolean.parseBoolean(config.getProperty("video-recording")))
+//			if (!result.isSuccess()) {
+//				List<String> ls = getFilesUnderFolder(PlaywrightFactory.path.toString());
+//				String pathval = PlaywrightFactory.path + "/" + ls.get(0);
+//				File file = new File(pathval);
+//				try {
+//					Allure.addAttachment("Test Case video file", new FileInputStream(file));
+//				} catch (FileNotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				Allure.addAttachment("Test Case video file link", file.getAbsolutePath().toString());
+//				System.out.println(file.getAbsolutePath());
+//				logStep(file.getAbsolutePath());
+//
+//			}
+//	}
+//
+//	@AfterMethod
+//	public void failureScreenshot(ITestResult result) {
+//		if (Boolean.parseBoolean(config.getProperty("failure-screenshot")))
+//			if (!result.isSuccess()) {
+//				String screenshotPath = config.getProperty("failure-screenshot-path")
+//						+ result.getMethod().getMethodName() + ".png";
+//				PlayWrightUtils.captureScreenshot(page, screenshotPath);
+//
+//			}
+//	}
 
 	public List<String> getFilesUnderFolder(String folderPath) {
 		List<String> ls = new ArrayList<>();
@@ -115,17 +98,7 @@ public class SetUpUtils extends PlaywrightFactory {
 
 	}
 
-	public JSONObject getTestData(String path) {
 
-		try {
-			FileReader reader = new FileReader(path);
-			testData = new JSONObject(new JSONTokener(reader));
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Failed to load test data");
-		}
-		return testData;
-	}
 
 	private Properties loadProperties(String fileName) {
 		Properties properties = new Properties();

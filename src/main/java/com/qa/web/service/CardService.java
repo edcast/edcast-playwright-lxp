@@ -20,21 +20,19 @@ import com.microsoft.playwright.Page;
 import com.qa.enums.*;
 @Listeners({AllureTestNg.class})
 public class CardService extends BaseTest {
-	Page page;
 
 	public CardService(Page page)
 
 	{
-		this.page = page;
 		smartCard = new SmartCardPage(page);
 		homePage = new HomePage(page);
 
 	}
 
-	public CardService createCard(CardTypes val, String cardName) {
+	public CardService createCard(CardTypes val, String cardName,JSONObject data) {
 		switch (val) {
 		case UPLOAD:	
-			homePage.clickOnCreateButton().clickSmartCard().clickOnUploadContent().setCardDetails(cardName);
+			homePage.clickOnCreateButton().clickSmartCard().clickOnUploadContent().setCardDetails(cardName,data);
 		}
 
 		return this;
@@ -45,7 +43,7 @@ public class CardService extends BaseTest {
 
 	}
 
-	public String getToastMessageAfterSavingCard1() {
+	public String getToastMessageAfterSavingCard1(Page page) {
 		return smartCard.getToastMessage(page);
 
 	}
@@ -56,20 +54,21 @@ public class CardService extends BaseTest {
 	}
 
 	public HomePageService clickOnAssignCard(Page page, String cardName, String startDate, String endDate) {
-		homePage.cardSearchOnHomePage(cardName);
+		homePage.cardSearchOnHomePage(cardName, page);
 		homePage.clickOnCardAssign(page, startDate, endDate);
 		return new HomePageService(page);
 
 	}
 
 	public CardService clickOnSelfAssignCardWithDate(Page page, String cardName, String startDate, String endDate) {
-		homePage.cardSearchOnHomePage(cardName);
+		homePage.cardSearchOnHomePage(cardName, page);
 		homePage.clickOnCardAssign(page, startDate, endDate);
 		return this;
 	}
-public Boolean isAssignToMeOptionPresent(String cardName) {
-	homePage.cardSearchOnHomePage(cardName);
-	return homePage.IsAssignToMePresent();
+
+	public Boolean isAssignToMeOptionPresent(Page page,String cardName) {
+	homePage.cardSearchOnHomePage(cardName,page);
+	return homePage.IsAssignToMePresent(page);
 	
 }
 }
